@@ -1,4 +1,4 @@
-# Watch
+# Watcher
 > Awesome iOS scrapper
 
 [![Go Version][swift-image]][swift-url]
