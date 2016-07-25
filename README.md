@@ -19,7 +19,7 @@
 
 ## Contribute
 
-We would love for you to contribute to **YourLibraryName**, check the ``LICENSE`` file for more info.
+We would love for you to contribute to **Watcher**, check the ``LICENSE`` file for more info.
 
 ## Meta
 
