@@ -1,0 +1,7 @@
+db:
+  host: http://127.0.0.1:9200
+github:
+  auth:
+    app: awesome
+    key: vsouza
+    secret: 3284092849sda
