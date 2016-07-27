@@ -1,5 +1,7 @@
 package models
 
+import "github.com/vsouza/watcher/db"
+
 type Categories struct {
 	ID         string `json:"id,omitempty"`
 	Name       string `json:"name"`
@@ -8,6 +10,15 @@ type Categories struct {
 	UpdatedAt  int64  `json:"updated_at,omitempty"`
 }
 
-func Extract() {
-
+func (c *Categories) SaveData(category *Categories) error {
+	client := db.GetDB()
+	var err error
+	_, err = client.Index().
+		Index("categories").
+		Type("category").
+		Id(category.ID).
+		BodyJson(category).
+		Refresh(true).
+		Do()
+	return err
 }
