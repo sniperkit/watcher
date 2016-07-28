@@ -28,7 +28,7 @@ Vinicius Souza – [@iamvsouza](https://twitter.com/iamvsouza) – hi@vsouza.com
 
 Distributed under the MIT license. See ``LICENSE`` for more information.
 
-[https://github.com/yourname/github-link](https://github.com/dbader/)
+[https://github.com/vsouza](https://github.com/vsouza/)
 
 [swift-image]:https://img.shields.io/badge/Go--version-1.6-blue.svg
 [swift-url]: https://swift.org/
