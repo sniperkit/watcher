@@ -1,4 +1,4 @@
-# Watch
+# Watcher
 > Awesome iOS scrapper
 
 [![Go Version][swift-image]][swift-url]
@@ -19,7 +19,7 @@
 
 ## Contribute
 
-We would love for you to contribute to **YourLibraryName**, check the ``LICENSE`` file for more info.
+We would love for you to contribute to **Watcher**, check the ``LICENSE`` file for more info.
 
 ## Meta
 
