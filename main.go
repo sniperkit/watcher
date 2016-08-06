@@ -2,24 +2,19 @@ package main
 
 import (
 	"flag"
-	"fmt"
-	"os"
+	"log"
 
 	"github.com/vsouza/watcher/config"
 	"github.com/vsouza/watcher/db"
 )
 
+var enviroment = flag.String("e", "development", "which environment do you wanna start ?")
+
 func main() {
-	enviroment := flag.String("e", "development", "")
-	flag.Usage = func() {
-		fmt.Println("Usage: server -e {mode}")
-		os.Exit(1)
-	}
 	flag.Parse()
+	if *enviroment == "" {
+		log.Fatal("enviroment must be set")
+	}
 	config.Init(*enviroment)
-	c := config.GetConfig()
-	fmt.Println(c.GetString("db.host"))
 	db.Init()
-	d := db.GetDB()
-	fmt.Println(d)
 }
