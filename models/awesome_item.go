@@ -31,8 +31,8 @@ type AwesomeItem struct {
 	OpenIssuesCount int32  `json:"open_issues_count"`
 	ForksCount      int32  `json:"forks"`
 	DefaultBranch   string `json:"default_branch"`
-	CreatedAt       string `json:"created_at"`
-	UpdatedAt       string `json:"updated_at"`
+	CreatedAt       string `json:"created_at,omitempty"`
+	UpdatedAt       string `json:"updated_at,omitempty"`
 	PackageManagers struct {
 		Carthage  bool `json:"carthage"`
 		SPM       bool `json:"spm"`

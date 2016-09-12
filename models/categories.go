@@ -9,7 +9,7 @@ import (
 type Category struct {
 	ID         string `json:"id"`
 	Name       string `json:"name"`
-	UpdatedAt  string `json:"updated_at"`
+	UpdatedAt  string `json:"updated_at,omitempty"`
 	Parent     string `json:"parent"`
 	MainParent string `json:"main_parent"`
 }

@@ -23,7 +23,7 @@ func main() {
 	config.Init(*enviroment)
 	db.Init()
 	jobrunner.Start()
-	jobrunner.Schedule("@every 2h", Scrapper{})
+	jobrunner.Schedule("@every 2s", Scrapper{})
 	routes := gin.Default()
 	routes.LoadHTMLGlob("views/Status.html")
 	routes.GET("/jobrunner/html", status.JobHtml)
