@@ -16,8 +16,7 @@ func Init(env string) {
 	v.SetConfigType("yaml")
 	v.SetConfigName(env)
 	v.AddConfigPath("config/")
-	err = v.ReadInConfig()
-	if err != nil {
+	if err = v.ReadInConfig(); err != nil {
 		log.Fatal("error on parsing configuration file")
 	}
 	config = v
