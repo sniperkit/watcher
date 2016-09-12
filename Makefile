@@ -6,4 +6,4 @@ run: build
 	@./$(NAME) -e development
 
 run-prod: build
-	@./$(NAME) -e development
+	@./$(NAME) -e production

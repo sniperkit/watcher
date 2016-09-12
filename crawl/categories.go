@@ -1,6 +1,7 @@
 package crawl
 
 import (
+	"fmt"
 	"sync"
 
 	"github.com/PuerkitoBio/goquery"
@@ -12,11 +13,11 @@ var catModel = new(models.Categories)
 func Runner(document *goquery.Document) {
 	var wg sync.WaitGroup
 
-	wg.Add(4)
+	wg.Add(1)
 	go GetMajorCategories(document, &wg)
-	go GetSubCategories(document, &wg)
-	go GetNestedCategories(document, &wg)
-	go GetNestedSubCategories(document, &wg)
+	// go GetSubCategories(document, &wg)
+	// go GetNestedCategories(document, &wg)
+	// go GetNestedSubCategories(document, &wg)
 
 	wg.Wait()
 	// DONE
@@ -29,8 +30,9 @@ func GetMajorCategories(document *goquery.Document, wg *sync.WaitGroup) error {
 	for i := range h1.Nodes {
 		cat := category{}
 		cat.Name = h1.Eq(i).Text()
+		fmt.Println(h1.Eq(i).Text())
 		// SAVE DATA
-		go catModel.SaveData(cat)
+		// go catModel.SaveData(cat)
 		// Extract Links
 	}
 }

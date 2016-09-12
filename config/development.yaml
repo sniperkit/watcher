@@ -1,7 +1,12 @@
+app:
+  name: watcher
+  version: 0.0.1
 db:
   host: http://127.0.0.1:9200
 github:
+  repo:
+    url: https://api.github.com/repos/vsouza/awesome-ios/git/trees/HEAD
+    readme: README.md
   auth:
     app: awesome
-    key: vsouza
-    secret: 3284092849sda
+    token: aa19667c305f8fb5f71f1ca0be90141faf8c8732
