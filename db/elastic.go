@@ -17,7 +17,7 @@ func Init() {
 		elastic.SetMaxRetries(2),
 	)
 	if err != nil {
-		log.Fatal("Error on connecting to database")
+		log.Fatalf("error connecting on database. %s", err)
 	}
 	db = client
 }
