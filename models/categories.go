@@ -1,24 +1,40 @@
 package models
 
-import "github.com/vsouza/watcher/db"
+import (
+	"log"
 
-type Categories struct {
-	ID         string `json:"id,omitempty"`
+	"github.com/vsouza/watcher/db"
+)
+
+type Category struct {
+	ID         string `json:"id"`
 	Name       string `json:"name"`
-	Parent     string `json:"parent,omitempty"`
-	MainParent string `json:"main_parent,omitempty"`
-	UpdatedAt  int64  `json:"updated_at,omitempty"`
+	UpdatedAt  string `json:"updated_at"`
+	Parent     string `json:"parent"`
+	MainParent string `json:"main_parent"`
 }
 
-func (c *Categories) SaveData(category *Categories) error {
+func (c Category) SaveData(category *Category) error {
 	client := db.GetDB()
+	indexType := "nested"
+	if len(category.Parent) == 0 {
+		indexType = "main"
+	}
 	var err error
 	_, err = client.Index().
 		Index("categories").
-		Type("category").
+		Type(indexType).
 		Id(category.ID).
-		BodyJson(category).
+		BodyJson(&category).
 		Refresh(true).
 		Do()
 	return err
+}
+
+func (c Category) Flush() {
+	client := db.GetDB()
+	_, err = client.Flush().Index("categories").Do()
+	if err != nil {
+		log.Println("error on flush db")
+	}
 }

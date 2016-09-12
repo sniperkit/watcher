@@ -4,48 +4,17 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
-	"fmt"
 	"log"
 	"strings"
 	"sync"
 
 	"github.com/PuerkitoBio/goquery"
+	"github.com/vsouza/watcher/models"
 	"github.com/vsouza/watcher/utils"
 )
 
-type Repo struct {
-	ID       int64  `json:"-" bson:"_id,omitempty"`
-	Type     string `json:"-" bson:"type"`
-	Name     string `json:"name" bson:"name,omitempty"`
-	Category string `json:"-" bson:"category,omitempty"`
-	FullName string `json:"full_name" bson:"full_name,omitempty"`
-	URL      string `json:"html_url" bson:"url,omitempty"`
-	Owner    struct {
-		Login     string `json:"login"`
-		Id        int64  `json:"id"`
-		AvatarURL string `json:"avatar_url"`
-		Type      string `json:"type"`
-	} `json:"owner" bson:"owner,omitempty"`
-	Description     string `json:"description" bson:"description,omitempty"`
-	Homepage        string `json:"homepage" bson:"homepage,omitempty"`
-	Stars           int32  `json:"stargazers_count" bson:"stargazers_count,omitempty"`
-	Watchers        int32  `json:"watchers_count" bson:"watchers_count,omitempty"`
-	Language        string `json:"language" bson:"language,omitempty"`
-	HasWiki         bool   `json:"has_wiki" bson:"has_wiki,omitempty"`
-	HasIssues       bool   `json:"has_issues" bson:"has_issues,omitempty"`
-	OpenIssuesCount int32  `json:"open_issues_count" bson:"open_issues_count,omitempty"`
-	ForksCount      int32  `json:"forks" bson:"forks_count,omitempty"`
-	DefaultBranch   string `json:"default_branch" bson:"default_branch,omitempty"`
-	CreatedAt       string `json:"created_at" bson:"created_at,omitempty"`
-	UpdatedAt       string `json:"updated_at" bson:"updatedAt,omitempty"`
-	PackageManagers struct {
-		Carthage  bool `bson:"carthage"`
-		SPM       bool `bson:"spm"`
-		CocoaPods bool `bson:"cocoa_pods"`
-	} `json:"package_managers" bson:"package_managers,omitempty"`
-}
-
-var throttle = make(chan int, 50)
+var linkModel = new(models.Link)
+var throttle = make(chan int, 2)
 
 func ExtractLinks(node *goquery.Selection, categoryName string) {
 	var wg sync.WaitGroup
@@ -61,6 +30,7 @@ func ExtractLinks(node *goquery.Selection, categoryName string) {
 			})
 		})
 	})
+	linkModel.Flush()
 	wg.Wait()
 }
 
@@ -71,17 +41,15 @@ func f(url string, categoryName string, wg *sync.WaitGroup, throttle chan int) {
 		log.Println(err)
 	}
 	if rep != nil {
-		// sendo to model
-		// go processRepoData(rep)
-		fmt.Println(rep)
+		linkModel.SaveData(rep)
 	}
 	<-throttle
 }
 
-func getGithubData(url, category string) (*Repo, error) {
+func getGithubData(url, category string) (*Link, error) {
 
 	if !strings.Contains(url, "github.com") || strings.Contains(url, "gist") {
-		return &Repo{Type: "url", URL: url, Category: category}, nil
+		return &Link{Type: "url", URL: url, Category: category}, nil
 	}
 
 	stringSlice := strings.Split(url, "/")
@@ -101,7 +69,7 @@ func getGithubData(url, category string) (*Repo, error) {
 		return nil, err
 	}
 	decoder := json.NewDecoder(req)
-	rep := Repo{
+	rep := Link{
 		Type:     "repo",
 		Category: category,
 	}
