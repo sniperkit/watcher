@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"strings"
 
+	"github.com/vsouza/watcher/document"
 	"github.com/vsouza/watcher/utils"
 )
 
@@ -15,7 +16,7 @@ func GetPkgManagers(repo *Repo) (*Repo, error) {
 		return nil, err
 	}
 
-	var c Content
+	var c document.Content
 	decoder := json.NewDecoder(req)
 	if err := decoder.Decode(&c); err != nil {
 		return nil, err

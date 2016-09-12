@@ -1,16 +1,30 @@
 package extractor
 
-type repo struct {
-	ID       string `json:"-" bson:"_id,omitempty"`
+import (
+	"bytes"
+	"encoding/json"
+	"errors"
+	"fmt"
+	"log"
+	"strings"
+	"sync"
+
+	"github.com/PuerkitoBio/goquery"
+	"github.com/vsouza/watcher/utils"
+)
+
+type Repo struct {
+	ID       int64  `json:"-" bson:"_id,omitempty"`
 	Type     string `json:"-" bson:"type"`
 	Name     string `json:"name" bson:"name,omitempty"`
 	Category string `json:"-" bson:"category,omitempty"`
 	FullName string `json:"full_name" bson:"full_name,omitempty"`
 	URL      string `json:"html_url" bson:"url,omitempty"`
 	Owner    struct {
-		Login     string `json:"login" bson:"username"`
-		AvatarURL string `json:"avatar_url" bson:"avatar_url"`
-		Type      string `json:"type" bson:"profile_type"`
+		Login     string `json:"login"`
+		Id        int64  `json:"id"`
+		AvatarURL string `json:"avatar_url"`
+		Type      string `json:"type"`
 	} `json:"owner" bson:"owner,omitempty"`
 	Description     string `json:"description" bson:"description,omitempty"`
 	Homepage        string `json:"homepage" bson:"homepage,omitempty"`
@@ -23,7 +37,7 @@ type repo struct {
 	ForksCount      int32  `json:"forks" bson:"forks_count,omitempty"`
 	DefaultBranch   string `json:"default_branch" bson:"default_branch,omitempty"`
 	CreatedAt       string `json:"created_at" bson:"created_at,omitempty"`
-	UpdatedAt       int64  `json:"updated_at" bson:"updatedAt,omitempty"`
+	UpdatedAt       string `json:"updated_at" bson:"updatedAt,omitempty"`
 	PackageManagers struct {
 		Carthage  bool `bson:"carthage"`
 		SPM       bool `bson:"spm"`
@@ -31,19 +45,18 @@ type repo struct {
 	} `json:"package_managers" bson:"package_managers,omitempty"`
 }
 
-var throttle = make(chan int, 2)
+var throttle = make(chan int, 50)
 
 func ExtractLinks(node *goquery.Selection, categoryName string) {
 	var wg sync.WaitGroup
 	node.NextFiltered("ul").Each(func(i int, s *goquery.Selection) {
 		s.Find("li").Each(func(j int, t *goquery.Selection) {
 			t.Find("a").Each(func(y int, u *goquery.Selection) {
-				if url, exists := u.Attr("href"); exists == false {
-          continue
-        }
-				wg.Add(1)
-				throttle <- 1
-        go f(url, categoryName, &wg, throttle)
+				url, exists := u.Attr("href")
+				if exists {
+					wg.Add(1)
+					throttle <- 1
+					go f(url, categoryName, &wg, throttle)
 				}
 			})
 		})
@@ -58,24 +71,25 @@ func f(url string, categoryName string, wg *sync.WaitGroup, throttle chan int) {
 		log.Println(err)
 	}
 	if rep != nil {
-    // sendo to model
+		// sendo to model
 		// go processRepoData(rep)
+		fmt.Println(rep)
 	}
 	<-throttle
 }
 
 func getGithubData(url, category string) (*Repo, error) {
 
-  if !strings.Contains(url, "github.com") || strings.Contains(url, "gist") {
-    return &Repo{Type: "url", URL: url, Category: category}, nil
-  }
+	if !strings.Contains(url, "github.com") || strings.Contains(url, "gist") {
+		return &Repo{Type: "url", URL: url, Category: category}, nil
+	}
 
-  stringSlice := strings.Split(url, "/")
+	stringSlice := strings.Split(url, "/")
 	if len(stringSlice) != 5 {
 		return nil, errors.New("item url size error")
 	}
 
-  var buffer bytes.Buffer
+	var buffer bytes.Buffer
 	buffer.WriteString("https://api.github.com/repos/")
 	buffer.WriteString(stringSlice[3])
 	buffer.WriteString("/")

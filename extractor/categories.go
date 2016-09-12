@@ -27,6 +27,7 @@ func ProcessCategories(document *goquery.Document) {
 		cat := category{}
 		cat.Name = h1.Eq(i).Text()
 		fmt.Printf("- %s \n", cat.Name)
+		ExtractLinks(h1.Eq(1), cat.Name)
 		GetSubCategories(h1.Eq(i))
 	}
 }
@@ -38,6 +39,7 @@ func GetSubCategories(node *goquery.Selection) {
 		cat.Name = h3.Eq(i).Text()
 		cat.Parent = node.Text()
 		fmt.Printf("-- %s \n", cat.Name)
+		ExtractLinks(h3.Eq(i), cat.Name)
 		GetNestedCategories(node, h3.Eq(i))
 		GetNestedSubCategories(node, h3.Eq(i))
 	}
@@ -50,6 +52,7 @@ func GetNestedCategories(mainNode, node *goquery.Selection) {
 		cat.Name = h4.Eq(i).Text()
 		cat.Parent = node.Text()
 		cat.MainParent = mainNode.Text()
+		ExtractLinks(h4.Eq(1), cat.Name)
 		fmt.Printf("--- %s \n", cat.Name)
 	}
 }
@@ -61,6 +64,7 @@ func GetNestedSubCategories(mainNode, node *goquery.Selection) {
 		cat.Name = h5.Eq(i).Text()
 		cat.Parent = node.Text()
 		cat.MainParent = mainNode.Text()
+		ExtractLinks(h5.Eq(1), cat.Name)
 		fmt.Printf("---- %s \n", cat.Name)
 	}
 }
