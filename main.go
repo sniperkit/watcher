@@ -8,6 +8,7 @@ import (
 	"github.com/vsouza/watcher/config"
 	"github.com/vsouza/watcher/db"
 	"github.com/vsouza/watcher/document"
+	"github.com/vsouza/watcher/extractor"
 )
 
 var enviroment = flag.String("e", "development", "which environment do you wanna start ?")
@@ -23,5 +24,6 @@ func main() {
 	if err != nil {
 		fmt.Println(err)
 	}
+	extractor.Runner(data)
 	fmt.Println(data)
 }
