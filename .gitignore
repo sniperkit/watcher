@@ -1,4 +1,5 @@
 config/production.yaml
+config/development.yaml
 watcher
 .DS_Store
 *.swp
