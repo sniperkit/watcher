@@ -12,6 +12,27 @@
 
 `make install`
 
+## Configuration
+
+Inside of config folder, `example.yaml` file contains a sample configuration to setup your watcher.
+
+```yaml
+
+app:
+  name: app_example
+  version: 0.0.1
+db:
+  host: http://127.0.0.1:9200
+github:
+  repo:
+    url: https://api.github.com/repos/vsouza/awesome-ios/git/trees/HEAD
+    readme: README.md
+  auth:
+    app: app_example
+    token: ----------
+
+```
+
 
 ## Release History
 
