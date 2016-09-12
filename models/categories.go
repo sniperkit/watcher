@@ -33,7 +33,7 @@ func (c Category) SaveData(category *Category) error {
 
 func (c Category) Flush() {
 	client := db.GetDB()
-	_, err = client.Flush().Index("categories").Do()
+	_, err := client.Flush().Index("categories").Do()
 	if err != nil {
 		log.Println("error on flush db")
 	}

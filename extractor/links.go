@@ -13,8 +13,8 @@ import (
 	"github.com/vsouza/watcher/utils"
 )
 
-var linkModel = new(models.Link)
-var throttle = make(chan int, 2)
+var throttle = make(chan int, 30)
+var awsModel = new(models.AwesomeItem)
 
 func ExtractLinks(node *goquery.Selection, categoryName string) {
 	var wg sync.WaitGroup
@@ -30,7 +30,6 @@ func ExtractLinks(node *goquery.Selection, categoryName string) {
 			})
 		})
 	})
-	linkModel.Flush()
 	wg.Wait()
 }
 
@@ -41,45 +40,46 @@ func f(url string, categoryName string, wg *sync.WaitGroup, throttle chan int) {
 		log.Println(err)
 	}
 	if rep != nil {
-		linkModel.SaveData(rep)
+		if err := awsModel.SaveData(rep); err != nil {
+			log.Println(err)
+		}
 	}
 	<-throttle
 }
 
-func getGithubData(url, category string) (*Link, error) {
+func getGithubData(url, category string) (*models.AwesomeItem, error) {
+	if strings.Contains(url, "github.com") && !strings.Contains(url, "gist") {
+		stringSlice := strings.Split(url, "/")
+		if len(stringSlice) != 5 {
+			return nil, errors.New("item url size error")
+		}
 
-	if !strings.Contains(url, "github.com") || strings.Contains(url, "gist") {
-		return &Link{Type: "url", URL: url, Category: category}, nil
+		var buffer bytes.Buffer
+		buffer.WriteString("https://api.github.com/repos/")
+		buffer.WriteString(stringSlice[3])
+		buffer.WriteString("/")
+		buffer.WriteString(stringSlice[4])
+
+		req, err := utils.DoReq(buffer.String())
+		defer req.Close()
+		if err != nil {
+			return nil, err
+		}
+		decoder := json.NewDecoder(req)
+		aws := models.AwesomeItem{
+			Type:     "repo",
+			Category: category,
+		}
+		if err := decoder.Decode(&aws); err != nil {
+			return nil, err
+		}
+
+		data, err := GetPkgManagers(&aws)
+		if err != nil {
+			return nil, err
+		}
+		return data, err
 	}
 
-	stringSlice := strings.Split(url, "/")
-	if len(stringSlice) != 5 {
-		return nil, errors.New("item url size error")
-	}
-
-	var buffer bytes.Buffer
-	buffer.WriteString("https://api.github.com/repos/")
-	buffer.WriteString(stringSlice[3])
-	buffer.WriteString("/")
-	buffer.WriteString(stringSlice[4])
-
-	req, err := utils.DoReq(buffer.String())
-	defer req.Close()
-	if err != nil {
-		return nil, err
-	}
-	decoder := json.NewDecoder(req)
-	rep := Link{
-		Type:     "repo",
-		Category: category,
-	}
-	if err := decoder.Decode(&rep); err != nil {
-		return nil, err
-	}
-
-	data, err := GetPkgManagers(&rep)
-	if err != nil {
-		return nil, err
-	}
-	return data, err
+	return &models.AwesomeItem{Type: "url", URL: url, Category: category}, nil
 }

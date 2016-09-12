@@ -5,6 +5,8 @@ import (
 	b64 "encoding/base64"
 	"io"
 	"net/http"
+
+	"github.com/vsouza/watcher/config"
 )
 
 func DecodeBase64(content string) ([]byte, error) {
@@ -16,11 +18,11 @@ func DecodeBase64(content string) ([]byte, error) {
 }
 
 func DoReq(url string) (io.ReadCloser, error) {
-	// cfg := config.GetConfig()
+	cfg := config.GetConfig()
 	client := &http.Client{}
 	req, err := http.NewRequest("GET", url, nil)
-	// req.Header.Set("User-Agent", cfg.GetString("github.auth.app"))
-	// req.SetBasicAuth("vsouza", cfg.GetString("github.auth.token"))
+	req.Header.Set("User-Agent", cfg.GetString("github.auth.app"))
+	req.SetBasicAuth("vsouza", cfg.GetString("github.auth.token"))
 	resp, err := client.Do(req)
 	return resp.Body, err
 }

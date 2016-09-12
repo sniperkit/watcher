@@ -25,5 +25,5 @@ func main() {
 		fmt.Println(err)
 	}
 	extractor.Runner(data)
-	fmt.Println(data)
+	log.Println("SUCCESS")
 }

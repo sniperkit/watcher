@@ -5,12 +5,13 @@ import (
 	"strings"
 
 	"github.com/vsouza/watcher/document"
+	"github.com/vsouza/watcher/models"
 	"github.com/vsouza/watcher/utils"
 )
 
-func GetPkgManagers(repo *Repo) (*Repo, error) {
+func GetPkgManagers(aws *models.AwesomeItem) (*models.AwesomeItem, error) {
 
-	req, err := utils.DoReq(utils.MountGHURL(repo.Owner.Login, repo.Name))
+	req, err := utils.DoReq(utils.MountGHURL(aws.Owner.Login, aws.Name))
 	defer req.Close()
 	if err != nil {
 		return nil, err
@@ -24,15 +25,15 @@ func GetPkgManagers(repo *Repo) (*Repo, error) {
 
 	for _, node := range c.Tree {
 		if node.Path == "Package.swift" {
-			repo.PackageManagers.SPM = true
+			aws.PackageManagers.SPM = true
 		}
 		if strings.Contains(node.Path, "podspec") {
-			repo.PackageManagers.CocoaPods = true
+			aws.PackageManagers.CocoaPods = true
 		}
 		if node.Path == "Cartfile" {
-			repo.PackageManagers.Carthage = true
+			aws.PackageManagers.Carthage = true
 		}
 	}
 
-	return repo, nil
+	return aws, nil
 }
