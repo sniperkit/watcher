@@ -15,12 +15,12 @@ func Init() (*goquery.Document, error) {
 	cfg := config.GetConfig()
 	var err error
 	var document *goquery.Document
-	content, err := getRemoteContent()
+	Content, err := getRemoteContent()
 	if err != nil {
 		log.Printf("here %s", err)
 		return nil, err
 	}
-	for _, node := range content.Tree {
+	for _, node := range Content.Tree {
 		if node.Path != cfg.GetString("github.repo.readme") {
 			continue
 		}
@@ -42,14 +42,14 @@ func Init() (*goquery.Document, error) {
 	return document, nil
 }
 
-type content struct {
+type Content struct {
 	Tree []struct {
 		Path string `json:"path"`
 		URL  string `json:"url"`
 	} `json:"tree"`
 }
 
-func getRemoteContent() (*content, error) {
+func getRemoteContent() (*Content, error) {
 	cfg := config.GetConfig()
 	url := cfg.GetString("github.repo.url")
 	r, err := utils.DoReq(url)
@@ -57,7 +57,7 @@ func getRemoteContent() (*content, error) {
 	if err != nil {
 		return nil, err
 	}
-	var c content
+	var c Content
 	decoder := json.NewDecoder(r)
 	if err := decoder.Decode(&c); err != nil {
 		return nil, err
@@ -67,7 +67,7 @@ func getRemoteContent() (*content, error) {
 
 type blob struct {
 	URL     string `json:"url"`
-	Content string `json:"content"`
+	Content string `json:"Content"`
 }
 
 func getBlob(url string) (*blob, error) {

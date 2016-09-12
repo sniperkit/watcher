@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"bytes"
 	b64 "encoding/base64"
 	"io"
 	"net/http"
@@ -24,4 +25,14 @@ func DoReq(url string) (io.ReadCloser, error) {
 	req.SetBasicAuth("vsouza", cfg.GetString("github.auth.token"))
 	resp, err := client.Do(req)
 	return resp.Body, err
+}
+
+func MountGHURL(owner, repoName string) string {
+	var url bytes.Buffer
+	url.WriteString("https://api.github.com/repos/")
+	url.WriteString(owner)
+	url.WriteString("/")
+	url.WriteString(repoName)
+	url.WriteString("/git/trees/HEAD")
+	return url.String()
 }
