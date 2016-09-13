@@ -34,8 +34,9 @@ github:
 
 ## Release History
 
-* 0.0.1
-    * Work in progress
+* 1.0.0
+  * Repo, Links, Package Managers and Categories data.
+
 
 ## Contribute
 
@@ -50,6 +51,6 @@ Distributed under the MIT license. See ``LICENSE`` for more information.
 [https://github.com/vsouza](https://github.com/vsouza/)
 
 [go-image]:https://img.shields.io/badge/Go--version-1.6-blue.svg
-[go-url]: https://swift.org/
+[go-url]: https://golang.org/
 [license-image]: https://img.shields.io/badge/License-MIT-blue.svg
 [license-url]: LICENSE
