@@ -1,7 +1,6 @@
 package models
 
 import (
-	"fmt"
 	"log"
 	"strconv"
 
@@ -50,26 +49,22 @@ func (a AwesomeItem) SaveData(awesomeItem *AwesomeItem) error {
 			"url":      awesomeItem.URL,
 			"category": awesomeItem.Category,
 		}
-		data, err := client.Index().
+		_, err = client.Index().
 			Index("awesome_items").
 			Type("link").
 			Id(awesomeItem.URL).
 			BodyJson(body).
 			Refresh(true).
 			Do()
-
-		fmt.Printf("here: %s \n", data)
-
 		return err
 	}
-	data, err := client.Index().
+	_, err = client.Index().
 		Index("awesome_items").
 		Type("github_repo").
 		Id(strconv.FormatInt(awesomeItem.ID, 10)).
 		BodyJson(&awesomeItem).
 		Refresh(true).
 		Do()
-	fmt.Println(data)
 	return err
 }
 

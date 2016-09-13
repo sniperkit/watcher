@@ -24,6 +24,7 @@ func DoReq(url string) (io.ReadCloser, error) {
 	req.Header.Set("User-Agent", cfg.GetString("github.auth.app"))
 	req.SetBasicAuth("vsouza", cfg.GetString("github.auth.token"))
 	resp, err := client.Do(req)
+	// defer resp.Body.Close()
 	return resp.Body, err
 }
 

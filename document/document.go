@@ -34,7 +34,10 @@ func Init() (*goquery.Document, error) {
 			return nil, err
 		}
 		unsafe := blackfriday.MarkdownCommon(decodedStr)
+		// html := bluemonday.UGCPolicy().SanitizeBytes(unsafe)
+		// fmt.Println(string(html))
 		document, err = goquery.NewDocumentFromReader(bytes.NewReader(unsafe))
+
 		if err != nil {
 			return nil, err
 		}

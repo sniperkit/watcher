@@ -23,22 +23,22 @@ func main() {
 	config.Init(*enviroment)
 	db.Init()
 	jobrunner.Start()
-	jobrunner.Schedule("@every 2s", Scrapper{})
+	jobrunner.Schedule("@every 2h", Scrapper{})
 	routes := gin.Default()
 	routes.LoadHTMLGlob("views/Status.html")
 	routes.GET("/jobrunner/html", status.JobHtml)
 	routes.Run(":8080")
-	log.Println("SUCCESS")
 }
 
 type Scrapper struct {
 }
 
 func (s Scrapper) Run() {
-	log.Println("Start...")
+	log.Println("============================== STARTED ==========================")
 	data, err := document.Init()
 	if err != nil {
 		log.Println(err)
 	}
 	extractor.Runner(data)
+	log.Println("============================== ENDED ==========================")
 }
