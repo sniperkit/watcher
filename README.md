@@ -33,7 +33,7 @@ __Linux__
 After install you have to change configuration file, with your credential and Elasticsearch host.
 Inside of config folder, `example.yaml` file contains a sample configuration to setup your watcher.
 
-*Watcher runs with this commando `./watcher -e {{ENVIROMENT}}` it's better you create a file called `development` with you configuration data, then run `./watcher -e development`.
+*Watcher runs with this command `./watcher -e {{ENVIROMENT}}` it's better you create a file called `development` with you configuration data, then run `./watcher -e development`.*
 
 ```yaml
 
