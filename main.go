@@ -20,8 +20,6 @@ func main() {
 	if *enviroment == "" {
 		log.Fatal("enviroment must be set")
 	}
-	config.Init(*enviroment)
-	db.Init()
 	jobrunner.Start()
 	jobrunner.Schedule("@every 2h", Scrapper{})
 	routes := gin.Default()
@@ -35,6 +33,8 @@ type Scrapper struct {
 
 func (s Scrapper) Run() {
 	log.Println("============================== STARTED ==========================")
+	config.Init(*enviroment)
+	db.Init()
 	data, err := document.Init()
 	if err != nil {
 		log.Println(err)

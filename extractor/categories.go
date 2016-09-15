@@ -9,11 +9,30 @@ import (
 
 var catModel = new(models.Category)
 
+func shouldIgnore(item string) bool {
+	ignored := []string{
+		"Contributing and License",
+		"About",
+		"How to Use",
+		"Content",
+	}
+	set := make(map[string]struct{}, len(ignored))
+	for _, s := range ignored {
+		set[s] = struct{}{}
+	}
+
+	_, ok := set[item]
+	return ok
+}
+
 func Runner(document *goquery.Document) {
 	ProcessCategories(document)
 }
 
 func ProcessCategories(document *goquery.Document) {
+	if document == nil {
+		log.Fatal("cannot open document")
+	}
 	h1 := document.Find("h1")
 	for i := range h1.Nodes {
 		cat := models.Category{}
@@ -21,50 +40,40 @@ func ProcessCategories(document *goquery.Document) {
 		if err := catModel.SaveData(&cat); err != nil {
 			log.Printf("category error: %s \n", err)
 		}
-		ExtractLinks(h1.Eq(1), cat.Name)
-		GetSubCategories(h1.Eq(i))
+		if !shouldIgnore(cat.Name) {
+			ExtractLinks(h1.Eq(i), cat.Name)
+			GetMainSubCategories(h1.Eq(i))
+		}
+	}
+}
+
+func GetMainSubCategories(node *goquery.Selection) {
+	h2 := node.NextFilteredUntil("h2", "h1")
+	for i := range h2.Nodes {
+		cat := models.Category{}
+		cat.Name = h2.Eq(i).Text()
+		if err := catModel.SaveData(&cat); err != nil {
+			log.Printf("main sub category error: %s \n", err)
+		}
+		cat.MainParent = node.Text()
+		if !shouldIgnore(cat.Name) {
+			ExtractLinks(h2.Eq(i), cat.Name)
+			GetSubCategories(h2.Eq(i))
+		}
 	}
 }
 
 func GetSubCategories(node *goquery.Selection) {
-	h3 := node.NextFilteredUntil("h3", "h1")
-	for i := range h3.Nodes {
-		cat := models.Category{}
-		cat.Name = h3.Eq(i).Text()
-		cat.Parent = node.Text()
-		if err := catModel.SaveData(&cat); err != nil {
-			log.Printf("sub category error: %s \n", err)
-		}
-		ExtractLinks(h3.Eq(i), cat.Name)
-		GetNestedCategories(node, h3.Eq(i))
-		GetNestedSubCategories(node, h3.Eq(i))
-	}
-}
-
-func GetNestedCategories(mainNode, node *goquery.Selection) {
-	h4 := node.NextFilteredUntil("h4", "h3")
+	h4 := node.NextFilteredUntil("h4", "h2")
 	for i := range h4.Nodes {
 		cat := models.Category{}
 		cat.Name = h4.Eq(i).Text()
 		cat.Parent = node.Text()
 		if err := catModel.SaveData(&cat); err != nil {
-			log.Printf("nested sub category error: %s \n", err)
+			log.Printf("sub category error: %s \n", err)
 		}
-		cat.MainParent = mainNode.Text()
-		ExtractLinks(h4.Eq(1), cat.Name)
-	}
-}
-
-func GetNestedSubCategories(mainNode, node *goquery.Selection) {
-	h5 := node.NextFilteredUntil("h5", "h3")
-	for i := range h5.Nodes {
-		cat := models.Category{}
-		cat.Name = h5.Eq(i).Text()
-		cat.Parent = node.Text()
-		if err := catModel.SaveData(&cat); err != nil {
-			log.Printf("nested sub error: %s \n", err)
+		if !shouldIgnore(cat.Name) {
+			ExtractLinks(h4.Eq(i), cat.Name)
 		}
-		cat.MainParent = mainNode.Text()
-		ExtractLinks(h5.Eq(1), cat.Name)
 	}
 }

@@ -7,7 +7,6 @@ import (
 	"log"
 	"strings"
 	"sync"
-	"time"
 
 	"github.com/PuerkitoBio/goquery"
 	"github.com/vsouza/watcher/models"
@@ -33,7 +32,7 @@ var awsModel = new(models.AwesomeItem)
 
 func ExtractLinks(node *goquery.Selection, categoryName string) {
 	var wg sync.WaitGroup
-	th := NewThrottler(2)
+	th := NewThrottler(6)
 	node.NextFiltered("ul").Each(func(i int, s *goquery.Selection) {
 		s.Find("li").Each(func(j int, t *goquery.Selection) {
 			t.Find("a").Each(func(y int, u *goquery.Selection) {
@@ -46,13 +45,12 @@ func ExtractLinks(node *goquery.Selection, categoryName string) {
 					go func() {
 						defer wg.Done()
 						defer th.Fill().Drain()
-						time.Sleep(1 * time.Millisecond) //to simulate work
 						rep, err := getGithubData(url, categoryName)
 						if err != nil {
 							log.Println(err)
 						}
 
-						if rep != nil {
+						if rep != nil && err == nil {
 							if err := awsModel.SaveData(rep); err != nil {
 								log.Println(err)
 							}
@@ -71,6 +69,7 @@ func getGithubData(url, category string) (*models.AwesomeItem, error) {
 	if strings.Contains(url, "github.com") && !strings.Contains(url, "gist") {
 		stringSlice := strings.Split(url, "/")
 		if len(stringSlice) != 5 {
+			log.Println(url)
 			return nil, errors.New("item url size error")
 		}
 

@@ -34,11 +34,9 @@ func Init() (*goquery.Document, error) {
 			return nil, err
 		}
 		unsafe := blackfriday.MarkdownCommon(decodedStr)
-		// html := bluemonday.UGCPolicy().SanitizeBytes(unsafe)
-		// fmt.Println(string(html))
 		document, err = goquery.NewDocumentFromReader(bytes.NewReader(unsafe))
-
 		if err != nil {
+			log.Println(err)
 			return nil, err
 		}
 	}
@@ -58,6 +56,7 @@ func getRemoteContent() (*Content, error) {
 	r, err := utils.DoReq(url)
 	defer r.Close()
 	if err != nil {
+		log.Println(err)
 		return nil, err
 	}
 	var c Content
