@@ -1,6 +1,10 @@
 # Watcher
 > Awesome iOS scrapper
 
+Get all data from [awesome-ios repo](http://github.com/vsouza/awesome-ios), extracting all links and github repos, collecting all relevant data on Github API (owner , package managers, issues, pull request and more) , indexing on Elasticsearch.
+
+This is part of project of [awesome-ios website](http://awesomeios.com) (new version).
+
 [![Go Version][go-image]][go-url]
 [![License][license-image]][license-url]
 
@@ -12,7 +16,24 @@
 
 ## Configuration
 
+At the first, you need to generate a Github Token, see this [instructions](https://github.com/blog/1509-personal-api-tokens).
+
+For the development you can use a local Elasticsearch, to install:
+
+__OSX__
+
+`brew install elasticsearch`
+
+__Linux__
+
+`apt-get install elasticsearch`
+
+
+
+After install you have to change configuration file, with your credential and Elasticsearch host.
 Inside of config folder, `example.yaml` file contains a sample configuration to setup your watcher.
+
+*Watcher runs with this command `./watcher -e {{ENVIROMENT}}` it's better you create a file called `development` with you configuration data, then run `./watcher -e development`.*
 
 ```yaml
 
@@ -34,8 +55,9 @@ github:
 
 ## Release History
 
-* 0.0.1
-    * Work in progress
+* 1.0.0
+  * Repo, Links, Package Managers and Categories data.
+
 
 ## Contribute
 
@@ -50,6 +72,6 @@ Distributed under the MIT license. See ``LICENSE`` for more information.
 [https://github.com/vsouza](https://github.com/vsouza/)
 
 [go-image]:https://img.shields.io/badge/Go--version-1.6-blue.svg
-[go-url]: https://swift.org/
+[go-url]: https://golang.org/
 [license-image]: https://img.shields.io/badge/License-MIT-blue.svg
 [license-url]: LICENSE
