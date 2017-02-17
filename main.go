@@ -3,8 +3,9 @@ package main
 import (
 	"flag"
 	"log"
+	"time"
 
-	"github.com/bamzi/jobrunner"
+	"github.com/jasonlvhit/gocron"
 	"github.com/vsouza/watcher/config"
 	"github.com/vsouza/watcher/db"
 	"github.com/vsouza/watcher/document"
@@ -18,17 +19,13 @@ func main() {
 	if *enviroment == "" {
 		log.Fatal("enviroment must be set")
 	}
-	jobrunner.Start()
-	jobrunner.Schedule("@every 10m", Scrapper{})
-	for {
-	}
+	gocron.Every(2).Hours().Do(run)
+	<-gocron.Start()
 }
 
-type Scrapper struct {
-}
-
-func (s Scrapper) Run() {
-	log.Println("============================== STARTED ==========================")
+func run() {
+	start := time.Now()
+	log.Printf("Started at: %s", start.String())
 	config.Init(*enviroment)
 	db.Init()
 	data, err := document.Init()
@@ -36,5 +33,8 @@ func (s Scrapper) Run() {
 		log.Println(err)
 	}
 	extractor.Runner(data)
-	log.Println("============================== ENDED ==========================")
+	elapsed := time.Since(start)
+	log.Printf("Awesome-iOS Parser took %s", elapsed)
+	ended := time.Now()
+	log.Printf("Ended at: %s", ended.String())
 }
