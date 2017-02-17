@@ -58,7 +58,7 @@ func (a AwesomeItem) SaveData(awesomeItem *AwesomeItem) error {
 			Do()
 		return err
 	}
-	_, err := client.Index().
+	_, err = client.Index().
 		Index("awesome_items").
 		Type("github_repo").
 		Id(strconv.FormatInt(awesomeItem.ID, 10)).
