@@ -21,11 +21,11 @@ func main() {
 		log.Fatal("enviroment must be set")
 	}
 	jobrunner.Start()
-	jobrunner.Schedule("@every 2h", Scrapper{})
+	jobrunner.Schedule("@every 10m", Scrapper{})
 	routes := gin.Default()
 	routes.LoadHTMLGlob("views/Status.html")
 	routes.GET("/jobrunner/html", status.JobHtml)
-	routes.Run(":8080")
+	routes.Run(":8888")
 }
 
 type Scrapper struct {

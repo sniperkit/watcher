@@ -14,8 +14,8 @@ func Init() {
 	c := config.GetConfig()
 	client, err := elastic.NewClient(
 		elastic.SetURL(c.GetString("db.host")),
-		elastic.SetMaxRetries(2),
 	)
+	client.Start()
 	if err != nil {
 		log.Fatalf("error connecting on database. %s", err)
 	}
