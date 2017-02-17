@@ -105,6 +105,12 @@
 			"revisionTime": "2016-11-12T23:52:43Z"
 		},
 		{
+			"checksumSHA1": "Epx/Fewr0QrXZRdg26+97oIoV2k=",
+			"path": "github.com/jasonlvhit/gocron",
+			"revision": "42a5804d37aa0b9239b265e894a16b8edbf52d54",
+			"revisionTime": "2016-06-29T18:10:17Z"
+		},
+		{
 			"checksumSHA1": "S6PDDQMYaKwLDIP/NsRYb4FRAqQ=",
 			"path": "github.com/magiconair/properties",
 			"revision": "0723e352fa358f9322c938cc2dadda874e9151a9",
