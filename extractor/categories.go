@@ -4,7 +4,7 @@ import (
 	"log"
 
 	"github.com/PuerkitoBio/goquery"
-	"github.com/vsouza/watcher/models"
+	"github.com/sniperkit/watcher/models"
 )
 
 var catModel = new(models.Category)

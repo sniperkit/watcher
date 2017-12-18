@@ -6,7 +6,7 @@ import (
 	"io"
 	"net/http"
 
-	"github.com/vsouza/watcher/config"
+	"github.com/sniperkit/watcher/config"
 )
 
 func DecodeBase64(content string) ([]byte, error) {

@@ -4,9 +4,9 @@ import (
 	"encoding/json"
 	"strings"
 
-	"github.com/vsouza/watcher/document"
-	"github.com/vsouza/watcher/models"
-	"github.com/vsouza/watcher/utils"
+	"github.com/sniperkit/watcher/document"
+	"github.com/sniperkit/watcher/models"
+	"github.com/sniperkit/watcher/utils"
 )
 
 func GetPkgManagers(aws *models.AwesomeItem) (*models.AwesomeItem, error) {

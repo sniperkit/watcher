@@ -3,7 +3,7 @@ package db
 import (
 	"log"
 
-	"github.com/vsouza/watcher/config"
+	"github.com/sniperkit/watcher/config"
 
 	"gopkg.in/olivere/elastic.v3"
 )

@@ -4,7 +4,7 @@ import (
 	"log"
 	"strconv"
 
-	"github.com/vsouza/watcher/db"
+	"github.com/sniperkit/watcher/db"
 )
 
 type AwesomeItem struct {

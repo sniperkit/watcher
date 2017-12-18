@@ -6,10 +6,10 @@ import (
 	"time"
 
 	"github.com/jasonlvhit/gocron"
-	"github.com/vsouza/watcher/config"
-	"github.com/vsouza/watcher/db"
-	"github.com/vsouza/watcher/document"
-	"github.com/vsouza/watcher/extractor"
+	"github.com/sniperkit/watcher/config"
+	"github.com/sniperkit/watcher/db"
+	"github.com/sniperkit/watcher/document"
+	"github.com/sniperkit/watcher/extractor"
 )
 
 var enviroment = flag.String("e", "development", "which environment do you wanna start ?")

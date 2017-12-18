@@ -7,8 +7,8 @@ import (
 
 	"github.com/PuerkitoBio/goquery"
 	"github.com/russross/blackfriday"
-	"github.com/vsouza/watcher/config"
-	"github.com/vsouza/watcher/utils"
+	"github.com/sniperkit/watcher/config"
+	"github.com/sniperkit/watcher/utils"
 )
 
 func Init() (*goquery.Document, error) {

@@ -3,7 +3,7 @@ package models
 import (
 	"log"
 
-	"github.com/vsouza/watcher/db"
+	"github.com/sniperkit/watcher/db"
 )
 
 type Category struct {

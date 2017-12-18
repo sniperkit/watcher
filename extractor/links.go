@@ -9,8 +9,8 @@ import (
 	"sync"
 
 	"github.com/PuerkitoBio/goquery"
-	"github.com/vsouza/watcher/models"
-	"github.com/vsouza/watcher/utils"
+	"github.com/sniperkit/watcher/models"
+	"github.com/sniperkit/watcher/utils"
 )
 
 type Throttler chan bool
